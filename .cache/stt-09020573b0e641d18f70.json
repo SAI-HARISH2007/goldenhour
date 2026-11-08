@@ -1,0 +1,9 @@
+{
+ "success": true,
+ "request_id": "01a1bb09-a0d0-7d92-9963-692568f3f076",
+ "transcript": "Hello sir, నా account నుండి డబ్బులు పోయాయి. ఇవాళ మధ్యాహ్నం two thirty కి ఒక SMS వచ్చింది. KYC update చేయాలి అని link పంపించారు. లింక్ ఓపెన్ చేసి డీటెయిల్స్ ఎంటర్ చేశాను వెంటనే forty nine thousand nine hundred ninety nine rupees కట్ అయ్యాయి. నా బ్యాంక్ SBI ట్రాన్సాక్షన్ ఐడి four one two three five six seven eight. nine zero one two.",
+ "model": "prisma-v3.0",
+ "processing_time": 0.35455822944641113,
+ "end_to_end_latency": 0.37278079986572266,
+ "detected_language_code": "te-IN"
+}

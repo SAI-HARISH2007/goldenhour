@@ -1,0 +1,9 @@
+{
+ "success": true,
+ "request_id": "01a1bb09-7a45-7ae4-a08e-267679a3b9de",
+ "transcript": "సార్, నేను Flipkart customer care number Googleలో వెతికి call చేశాను, వాళ్ళు refund ఇస్తామని. PhonePeలో request పంపించారు, నేను నేను PIN enter చేశాను, రెండుసార్లు పైసా పోయాయి. first twelve thousand తర్వాత eight thousand, UPI ID refund dot help seven at YBL. ఇది నిన్న రాత్రి nine o clock జరిగింది నా బ్యాంక్ HDFC.",
+ "model": "prisma-v3.0",
+ "processing_time": 0.6506280899047852,
+ "end_to_end_latency": 0.7610969543457031,
+ "detected_language_code": "te-IN"
+}

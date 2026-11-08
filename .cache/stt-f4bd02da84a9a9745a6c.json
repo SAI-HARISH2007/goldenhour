@@ -1,0 +1,9 @@
+{
+ "success": true,
+ "request_id": "01a1bb09-a5d5-797f-94c4-08e9e794d4fd",
+ "transcript": "Sir, please help చేయండి. మా నాన్న గారి account నుండి డబ్బులు పోయాయి. ఎవరో police అని video call చేసి arrest చేస్తామని భయపెట్టారు. మా నాన్న భయపడి transfer చేశారు, two lakhs అనుకుంటా. exactగా తెలీదు, ఈరోజు morning జరిగింది. transaction ID నా దగ్గర లేదు, bank Canara Bank అనుకుంటా.",
+ "model": "prisma-v3.0",
+ "processing_time": 0.5710353851318359,
+ "end_to_end_latency": 0.5731778144836426,
+ "detected_language_code": "te-IN"
+}

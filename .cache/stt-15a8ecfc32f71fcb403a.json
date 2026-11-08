@@ -1,0 +1,9 @@
+{
+ "success": true,
+ "request_id": "01a1bb09-a3dd-7639-98a3-08b9fd2f14f3",
+ "transcript": "Please sir, త్వరగా block చేయండి.",
+ "model": "prisma-v3.0",
+ "processing_time": 0.1103506088256836,
+ "end_to_end_latency": 0.11274886131286621,
+ "detected_language_code": "te-IN"
+}

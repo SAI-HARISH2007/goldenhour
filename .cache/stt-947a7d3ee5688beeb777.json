@@ -1,0 +1,9 @@
+{
+ "success": true,
+ "request_id": "01a1bb2d-953d-7046-99d0-5a07b6f9852c",
+ "transcript": "హలో sir, నాకు Telegramలో ఒక part time job message వచ్చింది. YouTube videos like చేస్తే డబ్బులు ఇస్తామని మొదట two hundred rupees ఇచ్చారు. నమ్మకం వచ్చింది, తర్వాత task కోసం deposit చేయాలి అన్నారు. మొన్న evening Google Payలో five thousand పంపాను. మళ్ళీ ten thousand five hundred పంపాను, ఇప్పుడు ఇంకా.",
+ "model": "prisma-v3.0",
+ "processing_time": 0.48336362838745117,
+ "end_to_end_latency": 0.5763144493103027,
+ "detected_language_code": "te-IN"
+}

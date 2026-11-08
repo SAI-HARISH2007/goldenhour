@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GoldenHour</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root { --bg:#0b0d10; --panel:#13161b; --panel2:#181c22; --line:#232833; --text:#e8eaee; --muted:#8b93a1;
+          --gold:#f5b83d; --ok:#3ecf8e; --warn:#f5a524; --bad:#ff5d5d; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--text); font:15px/1.5 Inter,system-ui,sans-serif; }
+  main { max-width:1180px; margin:0 auto; padding:28px 20px 60px; }
+  header { display:flex; justify-content:space-between; align-items:center; gap:16px; flex-wrap:wrap; }
+  .brand { display:flex; align-items:center; gap:12px; }
+  .logo { width:40px; height:40px; border-radius:50%; background:conic-gradient(var(--gold) 0 62%, #2a2f39 0); position:relative; }
+  .logo::after { content:""; position:absolute; inset:7px; border-radius:50%; background:var(--bg); }
+  h1 { margin:0; font-size:24px; letter-spacing:-.3px; }
+  .sub { color:var(--muted); font-size:13px; }
+  .disclose { font-size:12px; color:var(--warn); border:1px solid #4a3a17; background:#1d170a; padding:6px 10px; border-radius:999px; }
+
+  .calls { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin:24px 0 18px; }
+  .call { text-align:left; background:var(--panel); border:1px solid var(--line); color:var(--text); border-radius:12px;
+          padding:14px; cursor:pointer; font:inherit; transition:border-color .15s, transform .15s; }
+  .call:hover { border-color:#3a4150; transform:translateY(-1px); }
+  .call.on { border-color:var(--gold); }
+  .call b { display:block; font-size:14px; } .call span { color:var(--muted); font-size:12.5px; }
+  .call.live b::before { content:"● "; color:var(--bad); }
+  .call.rec { border-color:var(--bad); animation:pulse 1.3s infinite; }
+  @keyframes pulse { 50% { box-shadow:0 0 0 6px rgba(255,93,93,.12); } }
+  #status { color:var(--muted); font-size:13px; min-height:20px; margin-bottom:8px; }
+
+  .stats { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:16px; }
+  .stat { background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:12px 14px; }
+  .stat .k { color:var(--muted); font-size:12px; text-transform:uppercase; letter-spacing:.8px; }
+  .stat .v { font-size:22px; font-weight:700; margin-top:2px; font-variant-numeric:tabular-nums; }
+  .stat .v small { font-size:13px; font-weight:500; color:var(--muted); }
+  .v.gold { color:var(--gold); } .v.bad { color:var(--bad); }
+
+  .grid { display:grid; grid-template-columns:1fr 1.15fr; gap:16px; align-items:start; }
+  .card { background:var(--panel); border:1px solid var(--line); border-radius:14px; padding:18px; }
+  .card + .card { margin-top:16px; }
+  .card h2 { margin:0 0 12px; font-size:12px; text-transform:uppercase; letter-spacing:1.1px; color:var(--muted); font-weight:600;
+             display:flex; justify-content:space-between; gap:8px; }
+  audio { width:100%; height:36px; margin-bottom:12px; }
+  #transcript { font-size:16px; line-height:1.75; color:#c9ced8; }
+  mark { background:rgba(245,184,61,.14); color:var(--text); border-bottom:2px solid var(--gold); border-radius:3px; padding:0 2px; transition:background .15s; }
+  mark.unsure { border-bottom-color:var(--warn); background:rgba(245,165,36,.12); }
+  mark.hot { background:rgba(245,184,61,.45); }
+  .meta { color:var(--muted); font-size:12.5px; margin-top:12px; }
+
+  table { width:100%; border-collapse:collapse; }
+  td { padding:9px 6px; border-top:1px solid var(--line); vertical-align:top; }
+  tr:first-child td { border-top:0; }
+  td.l { color:var(--muted); width:38%; font-size:13.5px; }
+  td.v { font-weight:600; }
+  .mono { font-family:"JetBrains Mono",monospace; font-weight:600; letter-spacing:.3px; }
+  .note { display:block; font-weight:400; color:var(--muted); font-size:12.5px; }
+  .chip { display:inline-block; font-size:11px; font-weight:600; padding:1px 7px; border-radius:999px; margin-left:6px; vertical-align:1px; }
+  .c-ok { background:rgba(62,207,142,.14); color:var(--ok); } .c-warn { background:rgba(245,165,36,.15); color:var(--warn); }
+  .c-miss { background:rgba(255,93,93,.14); color:var(--bad); }
+  tr.row { cursor:default; } tr.row:hover td { background:var(--panel2); }
+  tr.fade { opacity:0; transform:translateY(4px); } tr.in { opacity:1; transform:none; transition:opacity .25s, transform .25s; }
+
+  .ask li { margin:0 0 10px; } .ask { margin:0; padding-left:18px; }
+  .ask .te { display:block; color:var(--gold); font-style:italic; }
+  .ask .f { color:var(--muted); font-size:12px; }
+  .flags { margin:0; padding-left:18px; color:#ffb4b4; } .flags li { margin-bottom:4px; }
+  .advice { margin-top:10px; padding:10px 12px; border-left:3px solid var(--gold); background:var(--panel2); border-radius:6px; font-size:14px; }
+  pre { white-space:pre-wrap; font:13px/1.55 "JetBrains Mono",monospace; color:#c9ced8; margin:0; }
+  button.small { background:transparent; border:1px solid var(--line); color:var(--muted); border-radius:8px; padding:3px 10px; font:inherit; font-size:12px; cursor:pointer; text-transform:none; letter-spacing:0; }
+  button.small:hover { color:var(--text); }
+  .empty { color:var(--muted); text-align:center; padding:50px 0; }
+  footer { margin-top:28px; color:var(--muted); font-size:12.5px; text-align:center; line-height:1.7; }
+  @media (max-width:900px) { .calls,.stats { grid-template-columns:1fr 1fr; } .grid { grid-template-columns:1fr; } }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <div class="brand"><div class="logo"></div>
+      <div><h1>GoldenHour</h1><div class="sub">Co-pilot for the 1930 cyber-fraud helpline · the call becomes the complaint</div></div>
+    </div>
+    <div class="disclose">Demo calls are role-plays by the builder · no real victim data</div>
+  </header>
+
+  <section class="calls">
+    <button class="call" data-s="fraud1"><b>Call 1 · Fake KYC link</b><span>SBI · one debit · full details</span></button>
+    <button class="call" data-s="fraud2"><b>Call 2 · Fake refund</b><span>HDFC · PhonePe · two debits</span></button>
+    <button class="call" data-s="fraud3"><b>Call 3 · "Digital arrest"</b><span>Panicked son · details missing</span></button>
+    <button class="call live" id="mic"><b>Take a live call</b><span>Speak Telugu + English · tap to stop</span></button>
+  </section>
+  <div id="status">Pick a call. The complaint fills itself from what the caller says.</div>
+
+  <section class="stats" id="stats" hidden>
+    <div class="stat"><div class="k">Money lost</div><div class="v bad" id="sLost"></div></div>
+    <div class="stat"><div class="k">Since the fraud</div><div class="v gold" id="sSince"></div></div>
+    <div class="stat"><div class="k">Complaint fields</div><div class="v" id="sFields"></div></div>
+    <div class="stat"><div class="k">Speech to complaint</div><div class="v" id="sSpeed"></div></div>
+  </section>
+
+  <section class="grid" id="work" hidden>
+    <div>
+      <div class="card">
+        <h2>Caller said <span id="dur"></span></h2>
+        <audio id="audio" controls></audio>
+        <div id="transcript"></div>
+        <div class="meta" id="meta"></div>
+      </div>
+      <div class="card">
+        <h2>Red flags</h2>
+        <ul class="flags" id="flags"></ul>
+        <div class="advice" id="advice"></div>
+      </div>
+    </div>
+    <div>
+      <div class="card">
+        <h2>Fraud complaint · auto-filled <span>hover a field to see where it was heard</span></h2>
+        <table id="form"></table>
+      </div>
+      <div class="card">
+        <h2>Ask the caller next</h2>
+        <ol class="ask" id="ask"></ol>
+      </div>
+      <div class="card">
+        <h2>Draft complaint (for the NCRP portal / bank nodal officer) <button class="small" id="copy">Copy</button></h2>
+        <pre id="draft"></pre>
+      </div>
+    </div>
+  </section>
+  <div class="empty" id="empty">No call yet.</div>
+
+  <footer>Speech-to-text: <b>Gnani AI Prisma v3.0</b> (Telugu–English code-mix). Extraction: plain rules, no language model —
+    every field links to the exact words it came from, and anything the caller was unsure about is marked, never guessed.<br>
+    GoldenHour assists the call-taker. It files nothing by itself.</footer>
+</main>
+
+<script>
+const $ = s => document.querySelector(s);
+const inr = n => "₹" + Number(n).toLocaleString("en-IN");
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+let rec = null, chunks = [];
+
+function fmtVal(row, x) {
+  if (row.key === "amount") return inr(x.value);
+  if (["received","demanded"].includes(row.key)) return inr(x.value);
+  if (["utr","dest_upi","dest_account","scam_phone"].includes(row.key)) return `<span class="mono">${esc(x.value)}</span>`;
+  return esc(x.value);
+}
+
+function render(res) {
+  if (res.error) { $("#status").textContent = res.error; return; }
+  $("#empty").hidden = true; $("#work").hidden = false; $("#stats").hidden = false;
+
+  // transcript with evidence marks
+  const spans = [];
+  res.rows.forEach(r => (r.items || []).forEach(x => x.ev &&
+    (Array.isArray(x.ev[0]) ? x.ev : [x.ev]).forEach(e => spans.push({s:e[0], e:e[1], key:r.key, unsure:!x.sure}))));
+  spans.sort((a,b) => a.s - b.s);
+  let html = "", pos = 0;
+  for (const sp of spans) { if (sp.s < pos) continue;
+    html += esc(res.transcript.slice(pos, sp.s)) + `<mark data-k="${sp.key}" class="${sp.unsure?"unsure":""}">${esc(res.transcript.slice(sp.s, sp.e))}</mark>`; pos = sp.e; }
+  $("#transcript").innerHTML = html + esc(res.transcript.slice(pos));
+  $("#dur").textContent = res.seconds + " s";
+  $("#meta").textContent = res.cached
+    ? `Transcript replayed from saved result (Prisma's measured time: ${res.stt_ms} ms). Shown in English letters.`
+    : `Transcribed live by Gnani Prisma in ${res.stt_ms} ms${res.chunks > 1 ? ` (${res.chunks} parts)` : ""}. Shown in English letters.`;
+
+  // form
+  const t = $("#form"); t.innerHTML = "";
+  res.rows.forEach(r => {
+    const tr = document.createElement("tr"); tr.className = "row fade"; tr.dataset.k = r.key;
+    let v;
+    if (r.missing) v = `<span style="color:var(--muted)">—</span><span class="chip c-miss">missing</span>${r.note ? `<span class="note">${esc(r.note)}</span>` : ""}`;
+    else v = r.items.map(x => `${fmtVal(r, x)}<span class="chip ${x.sure ? "c-ok" : "c-warn"}">${x.ev ? (x.sure ? "heard" : "confirm") : "default"}</span>${x.note ? `<span class="note">${esc(x.note)}</span>` : ""}`).join("<br>");
+    if (r.key === "amount" && res.n_debits > 1) v += `<span class="note">${res.n_debits} debits · total ${inr(res.total)}</span>`;
+    tr.innerHTML = `<td class="l">${esc(r.label)}</td><td class="v">${v}</td>`;
+    tr.onmouseenter = () => document.querySelectorAll(`mark[data-k="${r.key}"]`).forEach(m => m.classList.add("hot"));
+    tr.onmouseleave = () => document.querySelectorAll("mark.hot").forEach(m => m.classList.remove("hot"));
+    t.appendChild(tr);
+  });
+  [...t.rows].forEach((tr, i) => setTimeout(() => tr.classList.add("in"), 40 * i));
+
+  $("#ask").innerHTML = res.ask.length ? res.ask.map(a =>
+    `<li><span class="f">${esc(a.field)} · ${a.why}</span><br>${esc(a.en)}<span class="te">“${esc(a.te)}”</span></li>`).join("")
+    : "<li>Nothing missing. Submit the complaint.</li>";
+  $("#flags").innerHTML = res.flags.length ? res.flags.map(f => `<li>${esc(f.text)}</li>`).join("") : "<li style='color:var(--muted)'>None detected.</li>";
+  $("#advice").innerHTML = res.advice ? "<b>Tell the caller:</b> " + esc(res.advice) : "";
+  $("#advice").hidden = !res.advice;
+
+  // stats
+  $("#sLost").innerHTML = res.total ? inr(res.total) + (res.rows.find(r => r.key === "amount").items.some(x => !x.sure) ? " <small>approx.</small>" : "") : "—";
+  $("#sSince").innerHTML = res.hours_since == null ? "unknown" :
+    (res.hours_since < 1 ? `${Math.round(res.hours_since * 60)} min <small>inside golden hour</small>` : `${res.hours_since} h${res.when_exact ? "" : " <small>approx.</small>"}`);
+  const info = ["victim", "received", "demanded"];
+  const total = res.rows.filter(r => !info.includes(r.key)).length;
+  $("#sFields").innerHTML = `${res.filled}/${total} <small>filled · 0 typed</small>`;
+  $("#sSpeed").innerHTML = `${(res.stt_ms / 1000).toFixed(2)} s <small>+ ${res.build_ms} ms rules</small>`;
+
+  $("#draft").textContent = draft(res);
+  $("#status").textContent = res.required_missing.length
+    ? `Complaint drafted. ${res.required_missing.length} required field${res.required_missing.length > 1 ? "s" : ""} still missing — ask the caller (list on the right).`
+    : "Complaint ready. All required fields were heard on the call.";
+}
+
+function draft(res) {
+  const g = k => { const r = res.rows.find(r => r.key === k); return r && !r.missing && r.items.length ? r : null; };
+  const val = k => { const r = g(k); return r ? r.items.map(x => (k === "amount" ? inr(x.value) : x.value) + (x.sure ? "" : " (to confirm)")).join(" + ") : "[ASK CALLER]"; };
+  return [
+    `Category      : Online financial fraud — ${val("scam_type")}`,
+    `Victim        : ${val("victim")}`,
+    `Bank          : ${val("bank")}`,
+    `Amount        : ${val("amount")}${res.n_debits > 1 ? `  (total ${inr(res.total)})` : ""}`,
+    `Date / time   : ${val("when")}`,
+    `Mode          : ${val("app")}`,
+    `UTR           : ${val("utr")}`,
+    `Beneficiary   : ${g("dest_account") ? val("dest_account") : val("dest_upi")}`,
+    `Suspect phone : ${val("scam_phone")}`,
+    `Reported      : ${res.call_time}${res.hours_since != null ? ` (${res.hours_since} h after the fraud)` : ""}`,
+    ``,
+    `Request: place a hold on the beneficiary account/UPI ID and the listed transaction(s).`,
+    `Red flags: ${res.flags.map(f => f.text).join("; ") || "none"}.`,
+  ].join("\n");
+}
+
+async function send(url, body, audioUrl) {
+  $("#status").textContent = "Transcribing with Gnani Prisma…";
+  try { const r = await fetch(url, { method:"POST", body }); const res = await r.json();
+        if (audioUrl || res.audio) { $("#audio").src = audioUrl || res.audio; }
+        render(res); }
+  catch (e) { $("#status").textContent = "Something went wrong: " + e; }
+}
+
+document.querySelectorAll(".call[data-s]").forEach(b => b.onclick = () => {
+  document.querySelectorAll(".call").forEach(x => x.classList.remove("on")); b.classList.add("on");
+  send("/api/sample/" + b.dataset.s, new FormData());
+});
+
+$("#mic").onclick = async () => {
+  const b = $("#mic");
+  if (rec && rec.state === "recording") { rec.stop(); return; }
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({ audio:true });
+    rec = new MediaRecorder(stream); chunks = [];
+    rec.ondataavailable = e => chunks.push(e.data);
+    rec.onstop = () => { stream.getTracks().forEach(t => t.stop()); b.classList.remove("rec");
+      const blob = new Blob(chunks, { type: rec.mimeType }); const fd = new FormData(); fd.append("audio", blob, "call.webm");
+      send("/api/process", fd, URL.createObjectURL(blob)); };
+    rec.start(); document.querySelectorAll(".call").forEach(x => x.classList.remove("on")); b.classList.add("rec", "on");
+    const t0 = Date.now();
+    const tick = setInterval(() => { if (!rec || rec.state !== "recording") return clearInterval(tick);
+      const s = Math.floor((Date.now() - t0) / 1000);
+      $("#status").textContent = `On call · 0:${String(s).padStart(2, "0")} / 0:58 · tap the red button to hang up`; }, 250);
+    setTimeout(() => rec && rec.state === "recording" && rec.stop(), 58000);
+  } catch (e) { $("#status").textContent = "Microphone blocked: " + e.message; }
+};
+
+$("#copy").onclick = () => navigator.clipboard.writeText($("#draft").textContent).then(() => { $("#copy").textContent = "Copied"; setTimeout(() => $("#copy").textContent = "Copy", 1200); });
+</script>
+</body>
+</html>
