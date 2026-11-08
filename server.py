@@ -39,9 +39,11 @@ def api_process():
     f = request.files.get("audio")
     if not f:
         return jsonify(error="no audio"), 400
-    src = REC / f"{time.strftime('%H%M%S')}-{uuid.uuid4().hex[:6]}.webm"
+    ext = pathlib.Path(f.filename or "").suffix.lower()
+    ext = ext if ext in {".webm", ".ogg", ".opus", ".m4a", ".mp3", ".wav", ".aac", ".mp4", ".amr", ".flac"} else ".webm"
+    src = REC / f"{time.strftime('%H%M%S')}-{uuid.uuid4().hex[:6]}{ext}"
     f.save(src)
-    wav = src.with_suffix(".wav")
+    wav = src.with_name(src.stem + "-16k.wav")
     subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", str(src), "-t", "58", "-ac", "1", "-ar", "16000", str(wav)], check=True)
     try:
         return jsonify(run(wav, datetime.now()))
