@@ -177,6 +177,21 @@ def extract(text, call_time=None):
                 put("dest_upi", vpa, toks[k + 1].s, toks[i + 1].e,
                     f"Handle @{handle} belongs to {UPI_HANDLES[handle]}" if handle in UPI_HANDLES else None)
 
+    # Fallback: the "at" was swallowed by speech recognition ("help at ybl" -> "helbet ybl").
+    # Keep what was heard, but never present it as certain: the call-taker must read it back.
+    if "dest_upi" not in f:
+        for i, t in enumerate(toks):
+            if t.w in UPI_HANDLES and t.w not in ("upi", "paytm") and _near(toks, i, {"upi", "id"}, ahead=0, behind=8):
+                parts, k = [], i - 1
+                while k >= 0 and toks[k].w not in ("id", "upi", "is", "ki", "ku", "naa", "account") and i - k <= 6:
+                    w = toks[k].w
+                    parts.insert(0, {"dot": ".", "underscore": "_", "hyphen": "-", "dash": "-"}.get(w, str(DIGIT[w]) if w in DIGIT else w))
+                    k -= 1
+                if parts:
+                    put("dest_upi", "".join(parts) + "@" + t.w, toks[k + 1].s, t.e,
+                        f"Heard unclearly. Handle @{t.w} = {UPI_HANDLES[t.w]}; read the ID back to the caller.", sure=False)
+                    break
+
     # ---- bank, app, relation, time ------------------------------------------------------
     for i, t in enumerate(toks):
         for key, name in BANKS.items():

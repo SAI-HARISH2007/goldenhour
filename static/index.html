@@ -47,7 +47,7 @@
   #transcript { font-size:16px; line-height:1.75; color:#c9ced8; }
   mark { background:rgba(245,184,61,.14); color:var(--text); border-bottom:2px solid var(--gold); border-radius:3px; padding:0 2px; transition:background .15s; }
   mark.unsure { border-bottom-color:var(--warn); background:rgba(245,165,36,.12); }
-  mark.hot { background:rgba(245,184,61,.45); }
+  mark.hot { background:rgba(245,184,61,.55); box-shadow:0 0 0 2px var(--gold); }
   .meta { color:var(--muted); font-size:12.5px; margin-top:12px; }
 
   table { width:100%; border-collapse:collapse; }
@@ -159,7 +159,7 @@ function render(res) {
   const spans = [];
   res.rows.forEach(r => (r.items || []).forEach(x => x.ev &&
     (Array.isArray(x.ev[0]) ? x.ev : [x.ev]).forEach(e => spans.push({s:e[0], e:e[1], key:r.key, unsure:!x.sure}))));
-  spans.sort((a,b) => a.s - b.s);
+  spans.sort((a,b) => a.s - b.s || (b.e - b.s) - (a.e - a.s));  // overlap: longer span wins
   let html = "", pos = 0;
   for (const sp of spans) { if (sp.s < pos) continue;
     html += esc(res.transcript.slice(pos, sp.s)) + `<mark data-k="${sp.key}" class="${sp.unsure?"unsure":""}">${esc(res.transcript.slice(sp.s, sp.e))}</mark>`; pos = sp.e; }

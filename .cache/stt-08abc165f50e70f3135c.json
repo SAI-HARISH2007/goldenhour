@@ -1,0 +1,9 @@
+{
+ "success": true,
+ "request_id": "01a1bfa4-8c42-7a41-aab0-effc2362d776",
+ "transcript": "Hello sir, నా account నుండి money పోయింది sir. courier నుండి call చేశారు, మీ parcelలో drugs ఉన్నాయని చెప్పారు. police station భయపెట్టాలి sir. PhonePe twenty five thousand పంపాను sir, yesterday morning eleven o clock కి SBI bank sir, UPI ID customs dot helbet ybl transaction.",
+ "model": "prisma-v3.0",
+ "processing_time": 0.29544806480407715,
+ "end_to_end_latency": 0.5349681377410889,
+ "detected_language_code": "en-IN"
+}

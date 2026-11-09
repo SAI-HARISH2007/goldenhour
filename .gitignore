@@ -10,3 +10,5 @@ recordings/
 !fraud1.m4a
 !fraud2.m4a
 !fraud3.m4a
+video/
+*.aac
