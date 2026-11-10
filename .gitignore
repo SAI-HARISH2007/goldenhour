@@ -4,6 +4,7 @@ __pycache__/
 *.webm
 recordings/
 .venv*/
+venv/
 # the three role-play demo calls ARE committed (with their cached transcripts in .cache/)
 # so the demo runs with zero API credits
 *.m4a
