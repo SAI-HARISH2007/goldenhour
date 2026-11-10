@@ -27,14 +27,14 @@ def _stt_one(audio: bytes, name: str, fmt: str, language_code: str, model: str):
     CACHE.mkdir(exist_ok=True)
     cp = CACHE / f"stt-{hashlib.sha256(json.dumps(params, sort_keys=True).encode() + audio).hexdigest()[:20]}.json"
     if cp.exists():
-        body = json.loads(cp.read_text()); body["_cached"] = True
+        body = json.loads(cp.read_text(encoding="utf-8")); body["_cached"] = True
         return body
     r = requests.post(f"{BASE}/stt/v3", headers={"X-API-Key-ID": _key()}, data=params,
                       files={"audio_file": (name, audio)}, timeout=90)
     body = r.json()
     if r.status_code != 200 or not body.get("success"):
         raise RuntimeError(f"STT failed {r.status_code}: {body}")
-    cp.write_text(json.dumps(body, ensure_ascii=False, indent=1))
+    cp.write_text(json.dumps(body, ensure_ascii=False, indent=1), encoding="utf-8")
     body["_cached"] = False
     return body
 

@@ -228,7 +228,7 @@ def extract(text, call_time=None):
         if exact and part is None and h < 8: h += 12  # "two thirty" with no context: afternoon is likelier
         when = datetime(d.year, d.month, d.day, h, minute or 0)
         label = ["Today", "Yesterday", "Day before yesterday"][day or 0]
-        label += f", {when.strftime('%-I:%M %p')}" if exact else (f" {('morning' if part == 'am' else 'afternoon/evening')} — exact time not given" if part else " — time not given")
+        label += f", {when.hour % 12 or 12}:{when.minute:02d} {'AM' if when.hour < 12 else 'PM'}" if exact else (f" {('morning' if part == 'am' else 'afternoon/evening')} — exact time not given" if part else " — time not given")
         s, e = min(x[0] for x in tev), max(x[1] for x in tev)
         put("when", label, s, e, None if exact else "Ask for the exact time (bank SMS shows it).", exact)
         f["_when_dt"] = when.isoformat(); f["_when_exact"] = exact

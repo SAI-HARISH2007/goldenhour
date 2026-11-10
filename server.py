@@ -19,7 +19,7 @@ def run(path: pathlib.Path, call_time: datetime):
     c = complaint(text, call_time)
     c.update(transcript=text, stt_ms=stt["latency_ms"], cached=stt["cached"], chunks=stt["chunks"],
              build_ms=round((time.perf_counter() - t0) * 1000, 1), seconds=round(gnani.duration(path), 1),
-             call_time=call_time.strftime("%-I:%M %p, %d %b"))
+             call_time=f"{call_time.hour % 12 or 12}:{call_time.minute:02d} {'AM' if call_time.hour < 12 else 'PM'}, {call_time.strftime('%d %b')}")
     return c
 
 
